@@ -33,7 +33,11 @@ export default {
 					error: "#FF4C4C",
 					warning: "#FFC107",
 				},
-				"accent-blue": "#00BFFF", // Adding this as a direct color for opacity modifiers
+				// Adding these as direct colors for opacity modifiers
+				"accent-blue": "#00BFFF",
+				"accent-success": "#00FFB0",
+				"accent-error": "#FF4C4C",
+				"accent-warning": "#FFC107",
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
