@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   BarChart3,
   Shield,
@@ -48,9 +48,14 @@ function SidebarItem({
   );
 }
 
-export function SidebarNavigation() {
+interface SidebarNavigationProps {
+  onItemClick?: () => void;
+}
+
+export function SidebarNavigation({ onItemClick }: SidebarNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const currentPath = window.location.pathname;
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const routes = [
     {
@@ -94,6 +99,11 @@ export function SidebarNavigation() {
       href: "/settings",
     },
   ];
+
+  const handleItemClick = () => {
+    if (onItemClick) onItemClick();
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -142,7 +152,7 @@ export function SidebarNavigation() {
               label={route.label}
               href={route.href}
               isActive={currentPath === route.href}
-              onClick={() => setIsOpen(false)}
+              onClick={handleItemClick}
             />
           ))}
         </div>

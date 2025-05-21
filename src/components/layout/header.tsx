@@ -1,7 +1,7 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bell, User, ChevronDown } from "lucide-react";
+import { Bell, User, ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,12 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { SidebarNavigation } from "./sidebar-navigation";
 
 interface HeaderProps {
   systemStatus: "online" | "degraded" | "offline";
 }
 
 export function Header({ systemStatus = "online" }: HeaderProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   const statusClassName = {
     online: "status-badge-online",
     degraded: "status-badge-warning",
@@ -31,8 +36,23 @@ export function Header({ systemStatus = "online" }: HeaderProps) {
   const currentTime = new Date().toLocaleString();
 
   return (
-    <header className="h-14 border-b border-border flex items-center justify-between px-4 lg:px-6 bg-navy-100">
+    <header className="fixed top-0 left-0 right-0 z-30 h-14 border-b border-border flex items-center justify-between px-4 lg:px-6 bg-navy-100">
       <div className="flex items-center gap-4">
+        {/* Mobile menu trigger */}
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetTrigger asChild className="block lg:hidden">
+            <Button variant="ghost" size="icon" className="mr-2">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <div className="h-full">
+              <SidebarNavigation onItemClick={() => setMobileMenuOpen(false)} />
+            </div>
+          </SheetContent>
+        </Sheet>
+
         <span className={`status-badge ${statusClassName[systemStatus]}`}>
           {statusLabel[systemStatus]}
         </span>
