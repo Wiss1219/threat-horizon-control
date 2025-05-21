@@ -2,6 +2,7 @@
 import React from "react";
 import { Header } from "./header";
 import { SidebarNavigation } from "./sidebar-navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,8 @@ interface LayoutProps {
 }
 
 export function Layout({ children, systemStatus = "online" }: LayoutProps) {
+  const { user } = useAuth();
+  
   return (
     <div className="min-h-screen flex">
       {/* Fixed sidebar */}

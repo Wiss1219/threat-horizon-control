@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
 import { SidebarNavigation } from "./sidebar-navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface HeaderProps {
   systemStatus: "online" | "degraded" | "offline";
@@ -20,6 +20,7 @@ interface HeaderProps {
 
 export function Header({ systemStatus = "online" }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
   
   const statusClassName = {
     online: "status-badge-online",
@@ -34,6 +35,15 @@ export function Header({ systemStatus = "online" }: HeaderProps) {
   };
 
   const currentTime = new Date().toLocaleString();
+  
+  // Extract initials for avatar
+  const getInitials = () => {
+    if (!user?.email) return "U";
+    return user.email
+      .split("@")[0]
+      .slice(0, 2)
+      .toUpperCase();
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-30 h-14 border-b border-border flex items-center justify-between px-4 lg:px-6 bg-navy-100">
@@ -71,9 +81,11 @@ export function Header({ systemStatus = "online" }: HeaderProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
-                <AvatarFallback>AD</AvatarFallback>
+                <AvatarFallback>{getInitials()}</AvatarFallback>
               </Avatar>
-              <span className="hidden md:block">Admin</span>
+              <span className="hidden md:block">
+                {user?.email?.split("@")[0] || "User"}
+              </span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -84,8 +96,8 @@ export function Header({ systemStatus = "online" }: HeaderProps) {
             <DropdownMenuItem asChild>
               <Link to="/settings">Settings</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/logout">Logout</Link>
+            <DropdownMenuItem onClick={() => signOut()}>
+              Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
